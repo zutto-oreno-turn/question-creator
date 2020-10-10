@@ -1,6 +1,5 @@
 const twitter = require('twitter');
 const env = require('dotenv').config().parsed;
-const moment = require("moment");
 
 const client = new twitter({
   consumer_key: env.CONSUMER_KEY,
@@ -12,8 +11,28 @@ const client = new twitter({
 const params = {
   screen_name: 'realDonaldTrump',
   // since_id: 1314402920474042400,
+  count: 10,
   include_rts: false,
   tweet_mode: 'extended'
+};
+
+const formatText = text => {
+  const words = text.split(' ');
+  if (words.length == 1) {
+    return '';
+  }
+
+  let formated = [];
+  words.forEach((word, index) => {
+    if (word.substring(0, 1) === '#') {
+      return;
+    }
+    if (word.substring(0, 5) === 'https' && index == words.length - 1) {
+      return;
+    }
+    formated.push(word);
+  });
+  return formated.join(' ');
 };
 
 client.get('statuses/user_timeline', params, (error, tweets) => {
@@ -21,32 +40,9 @@ client.get('statuses/user_timeline', params, (error, tweets) => {
     return;
   }
   tweets.forEach(tweet => {
-    // console.log(index)
-    // console.log(index)
-    // console.log(tweet);
-    // console.log(tweet.created_at);
-    const date = moment(tweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').format("YYYY/MM/DD HH:mm:ss");
-    console.log(date);
     // console.log(tweet.id);
     // console.log(tweet.user.name);
-    // console.log(tweet.user.profile_image_url_https);
-    console.log(tweet.full_text);
-    // console.log(tweet.text);
+    // console.log(tweet.user.profile_image_url_https.replace('_normal', '_400x400'));
+    console.log(formatText(tweet.full_text));
+  });
 });
-
-  // for (const tweet in tweets) {
-  //   console.log(array[index])
-  //   console.log(tweets[0].id);
-  //   console.log(tweets[0].user.name);
-  //   console.log(tweets[0].user.profile_image_url_https);
-  //   console.log(tweets[0].text);
-  // }  
-});
-
-// client.post('statuses/update', {status: 'test'}, function(error, tweet, response){
-//     if (!error) {
-//         console.log(tweet);
-//     } else {
-//         console.log('error');
-//     }
-// });

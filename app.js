@@ -1,5 +1,7 @@
 const twitter = require('twitter');
+const fs = require('fs');
 const env = require('dotenv').config().parsed;
+const path = '.\\tweets.json';
 
 const client = new twitter({
   consumer_key: env.CONSUMER_KEY,
@@ -21,28 +23,41 @@ const formatText = text => {
   if (words.length == 1) {
     return '';
   }
-
-  let formated = [];
-  words.forEach((word, index) => {
+  const formated = words.filter((word, index) => {
     if (word.substring(0, 1) === '#') {
-      return;
+      return false;
     }
     if (word.substring(0, 5) === 'https' && index == words.length - 1) {
-      return;
+      return false;
     }
-    formated.push(word);
+    return true;
   });
   return formated.join(' ');
 };
 
-client.get('statuses/user_timeline', params, (error, tweets) => {
+const outputTweets = (error, tweets) => {
   if (error) {
     return;
   }
+  const outputs = [];
   tweets.forEach(tweet => {
-    // console.log(tweet.id);
-    // console.log(tweet.user.name);
-    // console.log(tweet.user.profile_image_url_https.replace('_normal', '_400x400'));
-    console.log(formatText(tweet.full_text));
+    const text = formatText(tweet.full_text);
+    if (text.length > 0) {
+      const output = {
+        id: tweet.id,
+        profile: {
+          name: tweet.user.name,
+          image: tweet.user.profile_image_url_https.replace('_normal', '_400x400')
+        },
+        sentence: text
+      };
+      outputs.push(output);
+    }
   });
-});
+  const questions = {
+    questions: outputs
+  };
+  fs.appendFileSync(path, JSON.stringify(questions));
+}
+
+client.get('statuses/user_timeline', params, outputTweets);

@@ -1,5 +1,6 @@
 const twitter = require('twitter');
 const fs = require('fs');
+const moment = require("moment");
 const env = require('dotenv').config().parsed;
 const name = process.argv[2];
 const path = `./json/${name}.json`;
@@ -75,8 +76,10 @@ const outputTweets = (error, tweets) => {
     if (tweet.id == params.since_id) {
       return;
     }
+    const date = moment(tweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en');
     const output = {
       id: tweet.id,
+      date: date.format("YYYY/MM/DD HH:mm:ss"),
       profile: {
         name: tweet.user.name,
         image: tweet.user.profile_image_url_https.replace('_normal', '_400x400')

@@ -4,14 +4,14 @@
 ### Example
 - https://www.zutto-oreno-turn.com/cdn/eigo/question/category/tweet/CNN.json
 
-### setup
+### Setup
 ```
 $ git clone https://github.com/zutto-oreno-turn/question-creator.git
 $ cd question-creator
 $ npm install
 ```
 
-### run
+### Run
 ```
 $ cd question-creator
 $ node app.js realDonaldTrump

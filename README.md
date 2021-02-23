@@ -1,7 +1,7 @@
 # question-creator
+- create json from twitter
 
-### created json
-Example
+### Example
 - https://www.zutto-oreno-turn.com/cdn/eigo/question/category/tweet/CNN.json
 
 ### setup

@@ -1,4 +1,4 @@
-# question-creator
+# Question Creator
 - create json from twitter
 
 ### Example
